@@ -1,0 +1,154 @@
+%% NOTE -- ONLY EDIT THE .Rnw FILE!!!  The .tex file is
+% likely to be overwritten.
+%
+%\VignetteIndexEntry{HDMT}
+%\VignetteDepends{}
+%\VignetteKeywords{Documentation}
+%\VignettePackage{HDMT}
+\documentclass[12pt]{article}
+\usepackage{times}
+\usepackage{hyperref}
+%\usepackage[authoryear,round]{natbib}
+
+\textwidth=6.2in
+\textheight=8.5in
+%\parskip=.3cm
+\oddsidemargin=.1in
+\evensidemargin=.1in
+\headheight=-.3in
+
+\newcommand{\scscst}{\scriptscriptstyle}
+\newcommand{\scst}{\scriptstyle}
+
+\newcommand{\R}{{\textsf{R}}}
+\newcommand{\code}[1]{{\texttt{#1}}}
+\newcommand{\term}[1]{{\emph{#1}}}
+\newcommand{\Rpackage}[1]{\textsf{#1}}
+\newcommand{\Rfunction}[1]{\texttt{#1}}
+\newcommand{\Robject}[1]{\texttt{#1}}
+\newcommand{\Rclass}[1]{{\textit{#1}}}
+\newcommand{\Rmethod}[1]{{\textit{#1}}}
+\newcommand{\Rfunarg}[1]{{\textit{#1}}}
+
+%\bibliographystyle{plainnat}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+\title{The \Rpackage{'HDMT'} package: A High-Dimensional Multiple Testing Procedure}
+\author{Xiaoyu Wang, James Y. Dai}
+\maketitle
+
+\section{Introduction}
+
+Mediation analysis is of rising interest in clinical trials and epidemiology. The advance of high-throughput technologies has made it possible to interrogate molecular phenotypes such as gene expression and DNA methylation in a genome-wide fashion, some of which may act as intermediaries of treatment, external exposures and life-style risk factors in the etiological pathway to diseases or traits. When testing for mediation in high-dimensional studies like ours \cite{Dai2019}, properly controlling the type I error rate remains a challenge due to the composite null hypothesis. Among existing methods, the joint significance (JS) test is an intersection-union test using the maximum p-value for testing the two parameters, though a naive significance rule based on the uniform null p-value distribution (JS-uniform) may yield an overly conservative type I error rate and therefore low power. This is particularly a concern for high-dimensional mediation hypotheses for genome-wide molecular intermediaries such as DNA methylation. In this article we develop a multiple-testing procedure that accurately controls the family-wise error rate (FWER) and the false discovery rate (FDR) for testing high-dimensional mediation composite null hypotheses. The core of our procedure is based on estimating the proportions of three types of component null hypotheses and deriving the corresponding mixture distribution (JS-mixture) of null p-values. Theoretical derivation and extensive simulations show that the proposed procedure provides adequate control of FWER and FDR when the number of mediation hypotheses is large.
+
+<<loadLibrary, echo=FALSE, results=hide>>=
+
+library(HDMT)
+@
+
+\section{Examples}
+
+We show two examples assessing the mediation role of DNA methylation in two studies.
+1) genetic regulation of gene expression in primary prostate cancer (PCa) samples from The Cancer Genome Atlas (TCGA) with risk SNPs as the exposure,
+and 2) regulation of prostate cancer progression in a Seattle-based cohort of patients diagnosed with clinically localized PCa with excercise as the exposure.
+<<data>>=
+data(exampleinputdata)
+dim(snp_input)
+#We only included 10% of the excercise data from the paper 
+#due to storage space limit.
+dim(exercise_input)
+#Each matrix contains two columns of p-values for candidate mediators.
+#Column 1 is the p-value of testing if an exposure  is associated with 
+#the mediator (alpha!=0). 
+#Column 2 is the p-value of testing if a mediator is associated with 
+#the outcome adjusted for the exposure (beta!=0) 
+
+@
+\subsection{The example of using risk SNPs as the exposure}
+We read the input first:
+<<input_pvalues>>=
+input_pvalues <- snp_input
+#To save time for the illustration, we use 10% of rows; to reproduce the 
+# figure in the paper, please don't run the following line
+input_pvalues=input_pvalues[sample(1:nrow(input_pvalues),
+                  size=ceiling(nrow(input_pvalues)/10)),]
+@
+We proceed to estimate the proportion of nulls:
+<<nullprop>>=
+nullprop <- nullestimation(input_pvalues,lambda=0.5)
+@
+We next compute the null distribution of pmax (maximum of studied two input p-values)
+using either approximation (method=0) or exact method (method=1):
+<<pnull1>>=
+pnull1<-adjust_quantile(nullprop$alpha00,nullprop$alpha01,nullprop$alpha10,
+nullprop$alpha1,nullprop$alpha2,input_pvalues,method=1)
+@
+We can compute the pointwise FDR using the approximation method:
+<<fdr>>=
+fdr <- fdrest(nullprop$alpha00,nullprop$alpha01,nullprop$alpha10,
+nullprop$alpha1,nullprop$alpha2,input_pvalues,method=0)
+@
+'HDMT' provides a function correct\_qqplot to draw the quantile-quantile plots for 
+pmax, based on null distribution 
+of JS-mixture (green dots) and JS-uniform (red dots)
+<<plot_snp,fig=TRUE>>=
+pmax <- apply(input_pvalues,1,max)
+correct_qqplot(pmax, pnull1)
+@
+The above figure shows the proposed method JS-mixture provides much 
+more accurate control of the FWER and 
+the FDR compared to the JS-uniform method.
+
+\subsection{The example of using exercise as the exposure}
+We read the input as:
+<<input_pvalues>>=
+input_pvalues <- exercise_input
+#To save time, we use 10% of rows
+input_pvalues=input_pvalues[sample(1:nrow(input_pvalues),
+                  size=ceiling(nrow(input_pvalues)/10)),]
+@
+The following procedures are identical to the previous example:
+<<nullprop>>=
+nullprop <- nullestimation(input_pvalues,lambda=0.5)
+@
+We compute the null distribution of pmax using approximation:
+<<pnull>>=
+pnull<-adjust_quantile(nullprop$alpha00,nullprop$alpha01,nullprop$alpha10,
+nullprop$alpha1,nullprop$alpha2,input_pvalues,method=0)
+@
+<<pnull1>>=
+pnull1<-adjust_quantile(nullprop$alpha00,nullprop$alpha01,nullprop$alpha10,
+nullprop$alpha1,nullprop$alpha2,input_pvalues,method=1)
+@
+
+The Q-Q plot based on the approximation method is shown as follows:
+<<plot_excercise1,fig=TRUE>>=
+pmax <- apply(input_pvalues,1,max)
+correct_qqplot(pmax, pnull)
+@
+
+The Q-Q plot based on the exact method is shown as follows:
+<<plot_excercise2,fig=TRUE>>=
+correct_qqplot(pmax, pnull1)
+@
+
+
+
+
+\section{session information}
+
+The version number of \R{} and packages loaded for generating the vignette were:
+
+\begin{verbatim}
+<<sessionInfo, echo=FALSE, results=tex>>=
+sessionInfo()
+@
+\end{verbatim}
+
+\bibliographystyle{plain}
+\bibliography{HDMT}
+ 
+\end{document}
+

@@ -1,0 +1,5 @@
+import("cp4p")
+import("fdrtool")
+importFrom("graphics", "abline", "legend", "plot", "points")
+importFrom("stats", "ks.test", "quantile", "complete.cases")
+export("nullestimation","fwerest","adjust_quantile","correct_qqplot","fdrest")
