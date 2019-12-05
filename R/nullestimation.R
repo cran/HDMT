@@ -3,7 +3,7 @@ nullestimation <-function(input_pvalues,lambda=0.5) {
   ## input_pvalues is a matrix with 2 columns of p-values, the first column is p-value for exposure-mediator association, the second column is p-value for mediator-outcome association adjusted for exposure
   ## lambda is the threshold for pi_{00} estimation, default 0.5
   #check input
-  if (!class(input_pvalues) %in% c("matrix","data.frame"))
+  if (is.null(ncol(input_pvalues)))
     stop("input_pvalues should be a matrix or data frame")
   if (ncol(input_pvalues) !=2)
     stop("inpute_pvalues should have 2 column")

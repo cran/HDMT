@@ -8,7 +8,7 @@ fwerest <-function(alpha10,alpha01,alpha00,alpha1,alpha2,input_pvalues,alpha=0.0
   ## method=0 corresponding to the approximation used in section 2.2-2.3, the default value is 0  
   ## method=1 corresponding to the exact used in section 2.4
   #check input
-  if (!class(input_pvalues) %in% c("matrix","data.frame"))
+  if (is.null(ncol(input_pvalues)))
     stop("input_pvalues should be a matrix or data frame")
   if (ncol(input_pvalues) !=2)
     stop("inpute_pvalues should have 2 column")

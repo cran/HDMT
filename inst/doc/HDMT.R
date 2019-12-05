@@ -10,11 +10,13 @@ library(HDMT)
 ###################################################
 ### code chunk number 2: data
 ###################################################
-data(exampleinputdata)
+data(snp_input)
 dim(snp_input)
+data(exercise_input)
+dim(exercise_input)
 #We only included 10% of the excercise data from the paper 
 #due to storage space limit.
-dim(exercise_input)
+
 #Each matrix contains two columns of p-values for candidate mediators.
 #Column 1 is the p-value of testing if an exposure  is associated with 
 #the mediator (alpha!=0). 

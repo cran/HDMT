@@ -36,7 +36,7 @@ James Y. Dai and X. Wang
 }
 
 \examples{
-data(exampleinputdata)
+data(snp_input)
 input_pvalues=snp_input
 #To save time for illustration, we use 10 percent of rows
 input_pvalues=input_pvalues[sample(1:nrow(input_pvalues),

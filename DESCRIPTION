@@ -2,8 +2,8 @@ Package: HDMT
 Type: Package
 Title: A Multiple Testing Procedure for High-Dimensional Mediation
         Hypotheses
-Version: 1.0
-Date: 2019-04-07
+Version: 1.0.1
+Date: 2019-12-4
 Authors@R: c(person("James", "Dai", role = c("aut", "cre"),
 		     email = "jdai@fredhutch.org"),
 	      person("Xiaoyu", "Wang", role = c("aut")))
@@ -16,6 +16,6 @@ Imports: cp4p,fdrtool
 LazyLoad: no
 License: GPL (>= 2)
 NeedsCompilation: no
-Packaged: 2019-04-15 20:16:02 UTC; xwang234
+Packaged: 2019-12-04 21:56:00 UTC; xwang234
 Repository: CRAN
-Date/Publication: 2019-04-16 12:42:43 UTC
+Date/Publication: 2019-12-05 05:50:02 UTC
