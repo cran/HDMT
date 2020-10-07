@@ -1,15 +1,15 @@
-\name{fwerest}
-\alias{fwerest}
+\name{fwer_est}
+\alias{fwer_est}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 A function used to compute Family wise error rate (FWER) cutoff for p-max 
 at a designated level}
 \description{
-A function to compute FWER cutoff based on the proposed method using 
+A function to compute the FWER cutoff for p-max using 
 the estimated mixture null distribution}
 \usage{
-fwerest(alpha10, alpha01, alpha00, alpha1, alpha2, input_pvalues, 
-alpha = 0.05, method = 0)
+fwer_est(alpha10, alpha01, alpha00, alpha1, alpha2, input_pvalues, 
+         alpha = 0.05, exact = 0)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -40,15 +40,14 @@ the outcome adjusted for the exposure (beta!=0)
 }
   \item{alpha}{
 The designated significance level for FWER}
-  \item{method}{
-The option to choose from two methods. method=0: approximation without 
-estimating the CDFs; method=1:estimate the CDFs nonparametrically
+  \item{exact}{
+The option to choose from two methods. exact=0: approximation without 
+estimating the CDFs; exact=1: estimate the CDFs nonparametrically
 }
 }
 \details{
 A function to compute FWER cutoff for p-max accounting for 
-the mixture null distribution.
-
+the mixture null distribution. The methodology detail can be found in Dai et al (2020).
 }
 \value{
 A numeric number represents the output FWER cutoff
@@ -56,7 +55,7 @@ A numeric number represents the output FWER cutoff
 \references{
 James Y. Dai, Janet L. Stanford, Michael LeBlanc. A multiple-testing 
 procedure for high-dimensional mediation hypotheses, 
-Journal of the American Statistical Association, 2019, submitted. 
+Journal of the American Statistical Association. 2020. In Press. 
 }
 \author{
 James Y. Dai and X. Wang
@@ -64,14 +63,14 @@ James Y. Dai and X. Wang
 
 \examples{
 data(snp_input)
-input_pvalues=snp_input
+input_pvalues <- snp_input
 #To save time for illustration, we use 10 percent of rows
-input_pvalues=input_pvalues[sample(1:nrow(input_pvalues),
-size=ceiling(nrow(input_pvalues)/10)),]
+input_pvalues <- input_pvalues[sample(1:nrow(input_pvalues),
+                               size = ceiling(nrow(input_pvalues)/10)),]
 
-nullprop <- nullestimation(input_pvalues,lambda=0.5)
-fwercut <- fwerest(nullprop$alpha00,nullprop$alpha01,nullprop$alpha10,
-nullprop$alpha1,nullprop$alpha2,input_pvalues,alpha=0.05,method=0)
+nullprop <- null_estimation(input_pvalues,lambda=0.5)
+fwercut <- fwer_est(nullprop$alpha00,nullprop$alpha01,nullprop$alpha10,
+                    nullprop$alpha1,nullprop$alpha2,input_pvalues,alpha=0.05,exact=0)
 
 }
 

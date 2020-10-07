@@ -1,26 +1,40 @@
 adjust_quantile <-
-  function(alpha00,alpha01,alpha10,alpha1,alpha2,input_pvalues,method=0){
+  function(alpha00,alpha01,alpha10,alpha1,alpha2,input_pvalues,exact=0){
     
+    ## This function computes the expected quantiles of the mixture null distribution 
     ## input_pvalues is the 2-column matrix storing the two sets of p-values
-    ## alpha00, alpha01, alpha10 are the proportions of three nulls, 
-    ## method=0 corresponding to the approximation used in section 2.2-2.3 of the paper;
-    ## method=1 corresponding to the exact method used in section 2.4 of the paper
+    ## alpha00, alpha01, alpha10 are the estimated proportions of three nulls, 
+    ## exact=0 corresponding to the approximation used in section 2.2-2.3 of the paper;
+    ## exact=1 corresponding to the exact method used in section 2.4 of the paper
     
+    if (is.null(ncol(input_pvalues)))
+      stop("input_pvalues should be a matrix or data frame")
+    if (ncol(input_pvalues) !=2)
+      stop("inpute_pvalues should have 2 column")
+    input_pvalues <- matrix(as.numeric(input_pvalues),nrow=nrow(input_pvalues))
+    if (sum(complete.cases(input_pvalues))<nrow(input_pvalues))
+      warning("input_pvalues contains NAs to be removed from analysis")
+    input_pvalues <- input_pvalues[complete.cases(input_pvalues),]
+    if (!is.null(nrow(input_pvalues)) & nrow(input_pvalues)<1)
+      stop("input_pvalues doesn't have valid p-values")
     
     #library(fdrtool)
     nmed <- nrow(input_pvalues)  
     
-    ## first compute the quantiles using the approximation method
+    ## compute the quantiles using the approximation method
     
-    pnull <- rep(0,nmed) 
-    for (i in 1:nmed) {
-      c <- (-i/nmed)
+    
+    if (exact==0) { 
+     
+      c <- (-(1:nmed)/nmed)
       b <- alpha10+alpha01
       a <- alpha00
-      pnull[i] <- (-b+sqrt(b^2-4*a*c))/(2*a)
-    }  
+      pnull <- (-b+sqrt(b^2-4*a*c))/(2*a)
+       
+    }
     
-    if (method==1) {
+    ##  compute the quantiles using the exact method
+    if (exact==1) {
       cdf12 <- input_pvalues
       orderp1 <- input_pvalues[order(input_pvalues[,1]),1]
       orderp2 <- input_pvalues[order(input_pvalues[,2]),2]
@@ -76,13 +90,12 @@ adjust_quantile <-
         cdf12[,1] <- ifelse(gcdf1>1,1,gcdf1)
         cdf12[,2] <- ifelse(gcdf2>1,1,gcdf2)
         
-        pnull <- rep(0,nmed) 
-        for (i in 1:nmed) {
-          c <- (-i/nmed)
-          b <- alpha10*cdf12[i,1]+alpha01*cdf12[i,2]
-          a <- alpha00
-          pnull[i] <- (-b+sqrt(b^2-4*a*c))/(2*a)
-        }  
+        
+       
+        c <- (-(1:nmed)/nmed)
+        b <- alpha10*cdf12[,1]+alpha01*cdf12[,2]
+        a <- alpha00
+        pnull <- (-b+sqrt(b^2-4*a*c))/(2*a)
         
         difff <- max(max(orderq1-pnull),max(orderq2-pnull))
         

@@ -1,13 +1,14 @@
-fdrest <-function(alpha00,alpha01,alpha10,alpha1,alpha2,input_pvalues, method=0){
+fdr_est <-function(alpha00,alpha01,alpha10,alpha1,alpha2,input_pvalues, exact=0){
   
-  ## alpha10,alpha01,alpha00 are null proportions
+  ## alpha10,alpha01,alpha00 are estimated three types of null proportions
   ## alpha1 is the marginal null proportion for first p-value
   ## alpha2 is the marginal null proportion for second p-value
   ## input pvalues are two columns of p-values
   ## alpha is the level of FWER to be control at   
-  ## method=0 corresponding to the approximation used in section 2.2-2.3 in the paper, the default value is 0  
-  ## method=1 corresponding to the exact used in section 2.4 in the paper
-  #check input
+  ## exact=0 corresponding to the approximation used in section 2.2-2.3 in the paper, the default value for exact is 0  
+  ## exact=1 corresponding to the exact used in section 2.4 in the paper
+  ## check input
+  
   if (is.null(ncol(input_pvalues)))
     stop("input_pvalues should be a matrix or data frame")
   if (ncol(input_pvalues) !=2)
@@ -23,14 +24,15 @@ fdrest <-function(alpha00,alpha01,alpha10,alpha1,alpha2,input_pvalues, method=0)
   nmed <- length(pmax)
   efdr1 <- rep(0,nmed)
   
-  for (i in 1:nmed) {
+  if (exact==0) {
+   for (i in 1:nmed) {
     fdr11 <-  (pmax[i]*alpha01)/mean(pmax<=pmax[i])
     fdr12 <-  (pmax[i]*alpha10)/mean(pmax<=pmax[i])          
     fdr2  <-  (pmax[i]*pmax[i]*alpha00)/mean(pmax<=pmax[i])   
     efdr1[i] <- fdr11+fdr12+fdr2
-  }  
-  
-  if (method==1) {
+   }  
+  }
+  if (exact==1) {
     #library(fdrtool)
     nmed  <- nrow(input_pvalues)  
     cdf12 <- input_pvalues
@@ -100,7 +102,6 @@ fdrest <-function(alpha00,alpha01,alpha10,alpha1,alpha2,input_pvalues, method=0)
   }
   
   efdr1 <- efdr1.order[rank(-pmax)]
-  
   return(efdr=efdr1)
 }
 

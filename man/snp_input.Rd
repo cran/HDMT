@@ -5,16 +5,16 @@
 An example dataset to demonstrate the usage of 'HDMT'
 }
 \description{
-The dataset was included to show the mediation role of DNA methylation 
-in the study of genetic regulation of gene expression in primary prostate 
+This example dataset is included in 'HDMT' to assess the mediation role of DNA methylation 
+in genetic regulation of gene expression in primary prostate 
 cancer (PCa) samples from The Cancer Genome Atlas (TCGA) with risk SNPs 
 as the exposure.
 
 The dataset is a matrix containing two columns of p-values for 
-candidate mediators. Column 1 is the p-value of testing if a mediator 
-is associated with the outcome conditional on the exposure (beta!=0). 
-Column 2 is the p-value of testing if a mediator is associated with 
-the outcome (alpha!=0). 
+candidate mediators. Column 1 contains the p-values for testing if an exposure is associated with 
+the mediator (alpha!=0). Column 2 contains the p-value for testing if a mediator is associated with 
+the outcome after adjusted for the exposure (beta!=0).
+
 }
 \usage{data("snp_input")}
 \format{
@@ -24,8 +24,8 @@ the outcome (alpha!=0).
 
 \references{
 James Y. Dai, Janet L. Stanford, Michael LeBlanc. A multiple-testing 
-procedure for high-dimensional mediation hypotheses, 
-Journal of the American Statistical Association, 2019, submitted. 
+procedure for high-dimensional mediation hypotheses. 
+Journal of the American Statistical Association, 2020, In Press. 
 }
 \examples{
 data(snp_input)

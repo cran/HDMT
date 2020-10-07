@@ -1,4 +1,4 @@
-nullestimation <-function(input_pvalues,lambda=0.5) {
+null_estimation <- function(input_pvalues,lambda=0.5) {
   
   ## input_pvalues is a matrix with 2 columns of p-values, the first column is p-value for exposure-mediator association, the second column is p-value for mediator-outcome association adjusted for exposure
   ## lambda is the threshold for pi_{00} estimation, default 0.5
@@ -30,50 +30,55 @@ nullestimation <-function(input_pvalues,lambda=0.5) {
   
   ## alpha1 is the proportion of nulls for first p-value 
   ## alpha2 is the proportion of nulls for second p-value 
-  #library(cp4p)
-  if (ks.test(input_pvalues[,1],"punif",0,1)$p>0.05) alpha1 <- 1 else     alpha1 <- estim.pi0(p=input_pvalues[,1], pi0.method="slim")$pi0.SLIM
-  if (ks.test(input_pvalues[,2],"punif",0,1)$p>0.05) alpha2 <- 1 else     alpha2 <- estim.pi0(p=input_pvalues[,2], pi0.method="slim")$pi0.SLIM
+ 
+  if (ks.test(input_pvalues[,1],"punif",0,1,alternative="greater")$p>0.05) alpha1 <- 1 else   alpha1 <- min(frac1[pcut==lambda],1)  
+  if (ks.test(input_pvalues[,2],"punif",0,1,alternative="greater")$p>0.05) alpha2 <- 1 else   alpha2 <- min(frac2[pcut==lambda],1)
   
-  if (alpha1 == 1 | alpha2==1) {
+
+  if (alpha00==1) {
+    alpha01 <- 0
+    alpha10 <- 0
     alpha11 <- 0
-    alpha10 <- 1-alpha1
-    alpha01 <- 1-alpha2
-    if (alpha1==1 & alpha2==1) alpha00 <- 1 else {
-      if (sum(alpha00+alpha10+alpha01)>1) {
-        err <- sum(alpha00+alpha10+alpha01)-1
-        alpha00 <- alpha00- err 
-      }  else {
-        err <- 1- sum(alpha00+alpha10+alpha01)
-        if (alpha10 !=0) alpha10 <- alpha10 + err
-        if (alpha01 !=0) alpha01 <- alpha01 + err
-      }      
-    }
-  } else {
+  } else {    
+    if (alpha1==1  & alpha2==1) {
+      alpha01 <- 0
+      alpha10 <- 0
+      alpha11 <- 0
+      alpha00 <- 1
+    }  
     
-    alpha11 <- max(1-alpha1+1-alpha2+alpha00-1,0)
-    if (alpha11 ==0) {
-      alpha10 <- 1-alpha1 
-      alpha01 <- 1-alpha2 
-      err <- 1-(alpha00+alpha10+alpha01)
-      alpha00 <- alpha00 + err
+    if (alpha1==1  & alpha2!=1) {
+      alpha10 <- 0
+      alpha11 <- 0
+      alpha01 <- alpha1-alpha00
+      alpha01 <- max(0,alpha01)
+      alpha00 <- 1-alpha01
+    }  
+    
+    if (alpha1!=1  & alpha2==1) {
+      alpha01 <- 0
+      alpha11 <- 0
+      alpha10 <- alpha2-alpha00
+      alpha10 <- max(0,alpha10)
+      alpha00 <- 1-alpha10
+    }  
+    
+    if (alpha1!=1  & alpha2!=1) {
+      alpha10 <- alpha2-alpha00
+      alpha10 <- max(0,alpha10)
+      alpha01 <- alpha1-alpha00
+      alpha01 <- max(0,alpha01)
       
-    }  else {
-      if (alpha11> (1-alpha1)| alpha11> (1-alpha2)) {
+      if ((1-alpha00-alpha01-alpha10)<0) {
         alpha11 <- 0
-        alpha10 <- 1-alpha1
-        alpha01 <- 1-alpha2
-        
-        err <- 1-(alpha00+alpha10+alpha01)
-        alpha00 <- alpha00 + err
-        
-      } else {
-        alpha10 <- max(1-alpha1-alpha11,0)
-        alpha01 <- max(1-alpha2-alpha11,0)
-        alpha00 <- 1-alpha10-alpha01-alpha11
-      }
-    }
+        alpha10 <- 1- alpha1
+        alpha01 <- 1- alpha2
+        alpha00 <- 1- alpha10 - alpha01
+      }  else {
+        alpha11 <-  1-alpha00-alpha01-alpha10
+      }  
+    }  
   }
   alpha.null <- list(alpha10=alpha10,alpha01=alpha01,alpha00=alpha00,alpha1=alpha1,alpha2=alpha2)
   return(alpha.null)
 }
-

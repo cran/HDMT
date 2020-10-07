@@ -5,17 +5,16 @@
 An example dataset to demonstrate the usage of 'HDMT'
 }
 \description{
-The dataset was included to show the mediation role of DNA methylation 
-in the study of regulation of prostate cancer progression in a 
+This example dataset was included to assess the mediation role of DNA methylation in the effect of exercise 
+on prostate cancer progression in a 
 Seattle-based cohort of patients diagnosed with clinically localized 
-PCa with excercise as the exposure. Due to space limit, 
-a subset (10 percent) of the full dataset used in the paper is included here.
+PCa. The entire data set contains two sets of p-values from genome-wide testing of 450K CpG sites. Due to space limit, 
+a subset (10 percent) of the full dataset  is included in the package for illustration.
 
 The dataset is a matrix containing two columns of p-values for 
-candidate mediators. Column 1 is the p-value of testing if a mediator 
-is associated with the outcome conditional on the exposure (beta!=0). 
-Column 2 is the p-value of testing if a mediator is associated with 
-the outcome (alpha!=0). 
+candidate mediators. Column 1 contains the p-values for testing if an exposure is associated with 
+the mediator (alpha!=0). Column 2 contains the p-value for testing if a mediator is associated with 
+the outcome after adjusted for the exposure (beta!=0).
 }
 \usage{data("exercise_input")}
 \format{
@@ -24,9 +23,11 @@ the outcome (alpha!=0).
 }
 
 \references{
+
 James Y. Dai, Janet L. Stanford, Michael LeBlanc. A multiple-testing 
-procedure for high-dimensional mediation hypotheses, 
-Journal of the American Statistical Association, 2019, submitted. 
+procedure for high-dimensional mediation hypotheses. 
+Journal of the American Statistical Association, 2020, In Press. 
+
 }
 \examples{
 data(exercise_input)
