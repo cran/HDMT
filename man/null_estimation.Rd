@@ -41,8 +41,8 @@ A list contains five elements.
 \item{alpha00}{A numeric number represents the proportion of null \eqn{H_{00}}}
 \item{alpha01}{A numeric number represents the proportion of null \eqn{H_{01}}}
 \item{alpha10}{A numeric number represents the proportion of null \eqn{H_{10}}}
-\item{alpha1}{A numeric number represents the proportion of null beta==0}
-\item{alpha2}{A numeric number represents the proportion of null alpha==0}
+\item{alpha1}{A numeric number represents the proportion of null alpha==0}
+\item{alpha2}{A numeric number represents the proportion of null beta==0}
 }
 
 \references{

@@ -32,7 +32,7 @@ fwer_est <-function(alpha10,alpha01,alpha00,alpha1,alpha2,input_pvalues,alpha=0.
   
   
   if (exact==1) {
-    #library(fdrtool)
+    
     xx1 <- c(0,input_pvalues[order(input_pvalues[,1]),1])
     yy1 <- c(0,seq(1,nmed,by=1)/nmed)
     gfit1<- gcmlcm(xx1,yy1,type="lcm")
@@ -48,6 +48,7 @@ fwer_est <-function(alpha10,alpha01,alpha00,alpha1,alpha2,input_pvalues,alpha=0.
     if (alpha1!=1) Fknots1 <- (Fknots1 - alpha1*xknots1)/(1-alpha1) else Fknots1 <- rep(0,length(xknots1))
     if (alpha2!=1) Fknots2 <- (Fknots2 - alpha2*xknots2)/(1-alpha2) else Fknots2 <- rep(0,length(xknots2))
     
+    fwer_alpha<- (-b+sqrt(b^2-4*a*c))/(2*a)
     qfwer <- fwer_alpha
     
     

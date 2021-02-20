@@ -23,10 +23,10 @@ A numeric number represents the proportion of null \eqn{H_{01}}
 A numeric number represents the proportion of null \eqn{H_{10}}
 }
   \item{alpha1}{
-A numeric number represents the proportion of null beta==0
+A numeric number represents the proportion of null alpha==0
 }
   \item{alpha2}{
-A numeric number represents the proportion of null alpha==0
+A numeric number represents the proportion of null beta==0
 }
  
  \item{input_pvalues}{
@@ -69,8 +69,11 @@ input_pvalues <- input_pvalues[sample(1:nrow(input_pvalues),
                                size = ceiling(nrow(input_pvalues)/10)),]
 
 nullprop <- null_estimation(input_pvalues,lambda=0.5)
-fwercut <- fwer_est(nullprop$alpha00,nullprop$alpha01,nullprop$alpha10,
-                    nullprop$alpha1,nullprop$alpha2,input_pvalues,alpha=0.05,exact=0)
+fwercut0 <- fwer_est(nullprop$alpha10,nullprop$alpha01,nullprop$alpha00,nullprop$alpha1,
+nullprop$alpha2,input_pvalues,alpha=0.05,exact=0)
+
+fwercut1 <- fwer_est(nullprop$alpha10,nullprop$alpha01,nullprop$alpha00,nullprop$alpha1,
+nullprop$alpha2,input_pvalues,alpha=0.05,exact=1)
 
 }
 
