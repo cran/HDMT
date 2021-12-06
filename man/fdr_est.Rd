@@ -58,7 +58,7 @@ input_pvalues <- snp_input
 #To save time for illustration, we use 10 percent of rows
 input_pvalues <- input_pvalues[sample(1:nrow(input_pvalues),size=ceiling(nrow(input_pvalues)/10)),]
 
-nullprop <- null_estimation(input_pvalues,lambda=0.5)
+nullprop <- null_estimation(input_pvalues)
 fdr <- fdr_est(nullprop$alpha00,nullprop$alpha01,nullprop$alpha10,
                nullprop$alpha1,nullprop$alpha2,input_pvalues,exact=0)
 

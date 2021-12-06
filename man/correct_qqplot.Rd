@@ -43,7 +43,7 @@ input_pvalues <- input_pvalues[sample(1:nrow(input_pvalues),
                                size=ceiling(nrow(input_pvalues)/10)),]
 
 pmax <- apply(input_pvalues,1,max)
-nullprop <- null_estimation(input_pvalues,lambda=0.5)
+nullprop <- null_estimation(input_pvalues)
 pnull1 <- adjust_quantile(nullprop$alpha10,nullprop$alpha01,nullprop$alpha00,
                           nullprop$alpha1,nullprop$alpha2,input_pvalues,exact=1)
 correct_qqplot(pmax,pnull1)

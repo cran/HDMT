@@ -69,7 +69,7 @@ input_pvalues=input_pvalues[sample(1:nrow(input_pvalues),
 @
 The first step of the procedure is to estimate the proportions of the three type of null hypotheses
 <<nullprop>>=
-nullprop <- null_estimation(input_pvalues,lambda=0.5)
+nullprop <- null_estimation(input_pvalues)
 nullprop
 @
 We next compute the expected quantiles of the mixture null distribution of $p_{max}$ (maximum of two p-values)
@@ -106,7 +106,7 @@ input_pvalues=input_pvalues[sample(1:nrow(input_pvalues),
 @
 The estimation procedures are identical to the previous example:
 <<nullprop>>=
-nullprop <- null_estimation(input_pvalues,lambda=0.5)
+nullprop <- null_estimation(input_pvalues)
 @
 We can compute the null distribution of pmax using the approximation method in Section 2.2, and we can also compute the null distribution of pmax using the exact method in Section 2.4.
 <<pnull>>=

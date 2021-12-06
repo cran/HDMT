@@ -28,7 +28,7 @@ input_pvalues=input_pvalues[sample(1:nrow(input_pvalues),
 ###################################################
 ### code chunk number 4: nullprop
 ###################################################
-nullprop <- null_estimation(input_pvalues,lambda=0.5)
+nullprop <- null_estimation(input_pvalues)
 nullprop
 
 
@@ -68,7 +68,7 @@ input_pvalues=input_pvalues[sample(1:nrow(input_pvalues),
 ###################################################
 ### code chunk number 9: nullprop
 ###################################################
-nullprop <- null_estimation(input_pvalues,lambda=0.5)
+nullprop <- null_estimation(input_pvalues)
 
 
 ###################################################

@@ -9,7 +9,7 @@ This is a function to estimate the proportions of the three component
 nulls involved in mediation testing. We developed a three component-mixture model method to estimate the proportions of nulls and provide much more accurate control of the family-wise error rate (FWER) and the false discovery rate (FDR), when  compared to the standard approach using the uniform null distribution.
 }
 \usage{
-null_estimation(input_pvalues, lambda = 0.5)
+null_estimation(input_pvalues)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -19,9 +19,6 @@ Column 1 is the p-value of testing if the exposure is associated with
 the candidate mediator (alpha!=0). 
 Column 2 is the p-value of testing if the candidate mediator is associated with 
 the outcome adjusted for the exposure (beta!=0).
-}
-  \item{lambda}{
-A tuning parameter between 0 and 1, the default value is 0.5.
 }
 }
 \details{
@@ -61,7 +58,7 @@ input_pvalues <- snp_input
 input_pvalues <- input_pvalues[sample(1:nrow(input_pvalues),
 size <- ceiling(nrow(input_pvalues)/10)),]
 
-nullprop <- null_estimation(input_pvalues,lambda=0.5)
+nullprop <- null_estimation(input_pvalues)
 }
 
 \keyword{composite null}
