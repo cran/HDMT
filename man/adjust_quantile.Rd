@@ -53,7 +53,7 @@ A vector contains the expected quantiles of p-values based on the estimated mixt
 \references{
 James Y. Dai, Janet L. Stanford, Michael LeBlanc. A multiple-testing 
 procedure for high-dimensional mediation hypotheses. 
-Journal of the American Statistical Association. 2020, In Press. 
+Journal of the American Statistical Association, 2020, DOI: 10.1080/01621459.2020.1765785. 
 }
 \author{
 James Y. Dai and X. Wang
